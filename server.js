@@ -73,7 +73,7 @@ function verifyToken(req, res, next) {
     }
     jwt.verify(refreshToken, "your_secret_key", (err, user) => {
       if (err) {
-        return res.status(403).send("Invalid refresh token, Login instead");
+        return res.status(403).send("Invalid refresh token, Login");
       }
       req.user = user;
       const newAccessToken = generateToken(req.user);
@@ -90,8 +90,16 @@ app.post(
     const accessToken = generateToken(req.user);
     const refreshToken = generateRefreshToken(req.user);
     // Set JWT as a cookie and set also refresh token
-    res.cookie("jwt", accessToken, { httpOnly: true });
-    res.cookie("refreshToken", refreshToken, { httpOnly: true });
+    res.cookie("jwt", accessToken, {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+    });
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+    });
     res.json({ accessToken });
   }
 );
