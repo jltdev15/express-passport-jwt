@@ -73,7 +73,8 @@ function verifyToken(req, res, next) {
     }
     jwt.verify(refreshToken, "your_secret_key", (err, user) => {
       if (err) {
-        return res.status(403).send("Invalid refresh token, Login");
+        res.status(403).send("Invalid refresh token, Login");
+        return clearCookies();
       }
       req.user = user;
       const newAccessToken = generateToken(req.user);
@@ -103,14 +104,16 @@ app.post(
     res.json({ accessToken });
   }
 );
-app.post("/logout", async (req, res) => {
+function clearCookies() {
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
   res.clearCookie("refreshToken", {
     httpOnly: true,
     sameSite: "None",
     secure: true,
   });
-
+}
+app.post("/logout", async (req, res) => {
+  clearCookies();
   res.sendStatus(204);
 });
 
