@@ -44,12 +44,12 @@ passport.use(
 // Generate JWT token
 function generateToken(user) {
   return jwt.sign({ id: user.id, username: user.username }, "your_secret_key", {
-    expiresIn: "15m",
+    expiresIn: "2m",
   });
 }
 function generateRefreshToken(user) {
   return jwt.sign({ id: user.id, username: user.username }, "your_secret_key", {
-    expiresIn: "30d",
+    expiresIn: "5m",
   });
 }
 
@@ -73,7 +73,7 @@ function verifyToken(req, res, next) {
     }
     jwt.verify(refreshToken, "your_secret_key", (err, user) => {
       if (err) {
-        return res.status(403).send("Invalid refresh token");
+        return res.status(403).send("Invalid refresh token, Login instead");
       }
       req.user = user;
       const newAccessToken = generateToken(req.user);
