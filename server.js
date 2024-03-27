@@ -104,7 +104,7 @@ app.post(
     res.json({ accessToken });
   }
 );
-function clearCookies() {
+function clearCookies(res) {
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
   res.clearCookie("refreshToken", {
     httpOnly: true,
@@ -113,7 +113,7 @@ function clearCookies() {
   });
 }
 app.post("/logout", async (req, res) => {
-  clearCookies();
+  clearCookies(res);
   res.sendStatus(204);
 });
 
