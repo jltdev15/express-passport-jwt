@@ -73,7 +73,7 @@ function verifyToken(req, res, next) {
     }
     jwt.verify(refreshToken, "your_secret_key", (err, user) => {
       if (err) {
-        return res.status(403).send("Invalid refresh token, Login");
+        return res.status(403).send("Invalid refresh token");
       }
       req.user = user;
       const newAccessToken = generateToken(req.user);
